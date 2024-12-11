@@ -6,17 +6,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/shyamapatro/restapi/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-const connectString = "mongodb+srv://shyama:shyama@cluster0.niex4.mongodb.net/"
 
 const dbName = "netflix"
 const colName = "watchlist"
@@ -25,6 +24,15 @@ var collection *mongo.Collection
 
 // connect with mongo
 func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// Retrieve the connection string from the environment variable
+	connectString := os.Getenv("DB_URL")
+
+	fmt.Println(connectString)
 	//   client option
 	clientOption := options.Client().ApplyURI(connectString)
 
